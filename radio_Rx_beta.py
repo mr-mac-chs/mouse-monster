@@ -43,21 +43,45 @@ def calc_num_turns(curr_dir, new_dir):
     return num_turns
 #END calc_num_turns
 ####################################################
+def robot_stop():
+    pin2.write_digital(0)
+    pin1.write_digital(0)
+    pin0.write_digital(0)
+#END robot_stop()
+
+#####################################################
+def robot_right():
+    pin2.write_digital(1)
+    pin1.write_digital(0)
+    pin0.write_digital(0)
+#END robot_right()
+
+#####################################################
+def robot_fwd():
+    pin2.write_digital(0)
+    pin1.write_digital(0)
+    pin0.write_digital(1)
+#END robot_fwd()
 
 #####################################################
 def tell_robot(turn_count, distance):
 
     #execute turn_count right turns
     for count in range(turn_count):
-        pin0.write_digital(1)
-        pin1.write_digital(0)
-        pin2.write_digital(0)
-
+        #DEBUG
+        display.scroll("t")
+        robot_right()
+        sleep (475) #it takes 375 ms for a right hand turn
+        robot_stop()
+    
+    sleep(250)
     #mv forward distance times
     for increment in range(distance):
-        pin0.write_digital(0)
-        pin1.write_digital(0)
-        pin2.write_digital(1)
+        #DEBUG
+        display.scroll("f")
+        robot_fwd()
+        sleep(725) # takes 625 ms for a forward movement
+        robot_stop()
         
 # END tell_robot
 
@@ -80,8 +104,8 @@ display.clear()
 while True:
     #Set up current coordinates of the robot
     if button_a.was_pressed():
-        x_coord = 0
-        y_coord = 0
+        x_coord = -1
+        y_coord = -1
         display.show(Image.YES)
         get_x_coords = True
         while get_x_coords :
@@ -100,7 +124,7 @@ while True:
                 get_y_coords = DONE
      
     #For DEBUG show current coords
-    curr_XY = str(x_coord)+ "," + str(y_coord)
+    curr_XY = str(x_coord)+ "," + str(y_coord) + "," + current_dir
     display.scroll(curr_XY)
 
     incoming = radio.receive()
@@ -134,9 +158,9 @@ while True:
         tell_robot(num_turns, x_steps) #move the robot (hopefully)
         
         #DEBUG
-        display.scroll("xT: " + str(num_turns))
+        #display.scroll("xT: " + str(num_turns))
         sleep(500)
-        display.scroll("dir: " + current_dir)
+        #display.scroll("dir: " + current_dir)
          
         if y_steps == 0:
             new_yDir = current_dir
@@ -151,9 +175,9 @@ while True:
         tell_robot(num_turns, y_steps)
         
         #DEBUG
-        display.scroll("yT: " + str(num_turns))
+        #display.scroll("yT: " + str(num_turns))
         sleep(500)
-        display.scroll("dir: " + current_dir)
+        #display.scroll("dir: " + current_dir)
         
         #update x_coord and y_coord to reflect our current position
         x_coord += x_steps
