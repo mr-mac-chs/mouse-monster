@@ -19,8 +19,8 @@ while True:
     #sleep(250)
     
     if button_a.was_pressed():
-        x_coord = 0
-        y_coord = 0
+        x_coord = -1
+        y_coord = -1
         display.show(Image.YES)
         get_x_coords = True
         while get_x_coords :
@@ -40,7 +40,7 @@ while True:
      
      
     tx_string = str(x_coord)+ "," + str(y_coord)
-    display.scroll(tx_string,wait=False)
+    #display.scroll(tx_string,wait=False)
     
     #Need to sit and listen
     #sleep(2000)
